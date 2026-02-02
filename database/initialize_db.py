@@ -12,10 +12,6 @@ def create_database(cell_count):
         success = True
         
         try:
-            cursor.execute("""
-                PRAGMA foreign_keys = ON;
-            """)
-            
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS projects (
@@ -42,7 +38,7 @@ def create_database(cell_count):
                     sample_id INTEGER PRIMARY KEY,
                     subject_id INTEGER NOT NULL,
                     time_from_treatment_start INTEGER NOT NULL,
-                    sample UNIQUE TEXT NOT NULL,
+                    sample TEXT UNIQUE NOT NULL,
                     sample_type TEXT NOT NULL,
                     FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
                 );""")
