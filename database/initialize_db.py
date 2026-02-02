@@ -1,25 +1,27 @@
+import os
 import sqlite3
 
 
-def createDatabase(cell_count):
-    connection = sqlite3.connect('C:\\Users\\benny\\PycharmProjects\\Teiko-Technical-Exam-1-30-2026\\database\\teiko_db.db')
-    messenger = connection.cursor()
+def create_database(cell_count):
+    db_path = os.path.join(os.path.dirname(__file__), "teiko_db.db")
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
     
     success = True
     
     try:
-        messenger.execute("""
+        cursor.execute("""
             PRAGMA foreign_keys = ON;
         """)
         
-        messenger.execute(
+        cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS projects (
                 project_id  INTEGER PRIMARY KEY,
                 project_name TEXT NOT NULL
             );""")
         
-        messenger.execute(
+        cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS subjects (
                 subject_id INTEGER PRIMARY KEY,
@@ -31,16 +33,16 @@ def createDatabase(cell_count):
                 FOREIGN KEY (project_id) REFERENCES projects(project_id)
             );""")
             
-        messenger.execute("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS treatments (
                 treatment_id INTEGER PRIMARY KEY,
-                subject_ID INTEGER NOT NULL,
+                subject_id INTEGER NOT NULL,
                 treatment TEXT NOT NULL,
                 response TEXT,
                 FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
             );""")
             
-        messenger.execute("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS samples (
                 sample_id INTEGER PRIMARY KEY,
                 subject_id INTEGER NOT NULL,
@@ -52,7 +54,7 @@ def createDatabase(cell_count):
                 FOREIGN KEY (treatment_id) REFERENCES treatments(treatment_id)
             );""")
             
-        messenger.execute("""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS results (
                 result_id INTEGER PRIMARY KEY,
                 sample_id INTEGER NOT NULL,
@@ -67,7 +69,7 @@ def createDatabase(cell_count):
         # add raw data table
         cell_count.to_sql("raw_data", connection, if_exists="replace", index=False)
         
-        messenger.executescript("""
+        cursor.executescript("""
             INSERT INTO projects (project_name)
             SELECT DISTINCT project
             FROM raw_data;
@@ -97,12 +99,18 @@ def createDatabase(cell_count):
             DROP TABLE raw_data
         """)
         
-        connection.commit()
-        connection.close()
-        
     except sqlite3.OperationalError as e:
         print("ERROR INITIALIZING DATABASE")
         print(e)
         success = False
+    except sqlite3.Error as e:
+        print("SQLITE ERROR OCCURRED")
+        print(e)
+        success = False
+    except Exception as e:
+        print(e)
+        success = False
     finally:
+        connection.commit()
+        connection.close()
         return success
