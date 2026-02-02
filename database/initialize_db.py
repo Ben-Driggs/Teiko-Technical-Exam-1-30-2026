@@ -20,7 +20,7 @@ def create_database(cell_count):
                 """
                 CREATE TABLE IF NOT EXISTS projects (
                     project_id  INTEGER PRIMARY KEY,
-                    project_name TEXT NOT NULL
+                    project_name TEXT UNIQUE NOT NULL
                 );""")
             
             cursor.execute(
@@ -28,7 +28,7 @@ def create_database(cell_count):
                 CREATE TABLE IF NOT EXISTS subjects (
                     subject_id INTEGER PRIMARY KEY,
                     project_id INTEGER NOT NULL,
-                    subject TEXT NOT NULL,
+                    subject TEXT UNIQUE NOT NULL,
                     condition TEXT NOT NULL,
                     age INTEGER NOT NULL,
                     sex TEXT NOT NULL,
@@ -42,7 +42,7 @@ def create_database(cell_count):
                     sample_id INTEGER PRIMARY KEY,
                     subject_id INTEGER NOT NULL,
                     time_from_treatment_start INTEGER NOT NULL,
-                    sample TEXT NOT NULL,
+                    sample UNIQUE TEXT NOT NULL,
                     sample_type TEXT NOT NULL,
                     FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
                 );""")
@@ -62,6 +62,7 @@ def create_database(cell_count):
             # add raw data table
             cell_count.to_sql("raw_data", connection, if_exists="replace", index=False)
             
+            # I should format this better in case an error happens part way through...
             cursor.executescript("""
                 INSERT INTO projects (project_name)
                 SELECT DISTINCT project

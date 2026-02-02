@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # read in csv
     try:
         cc = pd.read_csv('cell-count.csv')
-    except FileExistsError as e:
+    except FileNotFoundError as e:
         print("Couldn't find 'cell-count.csv' file. Make sure this csv is in the main working directory.")
         print(e)
         sys.exit(1)
