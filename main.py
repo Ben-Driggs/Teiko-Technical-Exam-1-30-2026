@@ -1,8 +1,6 @@
 import sys
 import os
 import sqlite3
-from functools import total_ordering
-
 import pandas as pd
 import seaborn as sns
 
@@ -110,7 +108,21 @@ def data_overview():
 
 
 def statistical_analysis():
-    pass
+    """
+    PART 3: STATISTICAL ANALYSIS
+        - Compare the differences in cell population relative frequencies of
+        melanoma patients receiving MIRACLIB who respond (responders) versus
+        those who do not (non-responders), with the overarching aim of
+        predicting response to the treatment miraclib. Response information
+        can be found in column "response", with value "yes" for responding
+        and value "no" for non-responding. Please only include PBMC samples.
+        - Visualize the population relative frequencies comparing responders
+        versus non-responders using a boxplot of for each immune cell population.
+        - Report which cell populations have a significant difference in
+        relative frequencies between responders and non-responders. Statistics
+        are needed to support any conclusion to convince Yah of Bob’s findings.
+    """
+    
     
     
 if __name__ == '__main__':
