@@ -1,13 +1,27 @@
 import sys
 import os
 import pandas as pd
+import seaborn as sns
 
 import database.initialize_db as init_db
 
 
 def main(cell_count):
-    cell_populations = ["b_cell", "cd8_t_cell", "cd4_t_cell", "nk_cell", "monocyte"]
     
+    # Part 1: Data Management
+    data_management(cell_count)
+    
+    # Part 2: Data Overview
+    cell_populations = ["b_cell", "cd8_t_cell", "cd4_t_cell", "nk_cell", "monocyte"]
+    data_overview(cell_count, cell_populations)
+    
+    # Part 3: Statistical Analysis
+    statistical_analysis()
+    
+    print("finished")
+    
+    
+def data_management(cell_count):
     """
     PART 1: DATA MANAGEMENT
     """
@@ -19,13 +33,15 @@ def main(cell_count):
             print("Check database initialization for errors")
             sys.exit(1)
             
+
+def data_overview(cell_count, cell_populations):
     """
-    PART 2: INITIAL ANALYSIS - DATA OVERVIEW
-        - create cell type frequency summary table
-        - columns needed: sample, total_count, population, count, percentage
-    """
+        PART 2: INITIAL ANALYSIS - DATA OVERVIEW
+            - create cell type frequency summary table
+            - columns needed: sample, total_count, population, count, percentage
+        """
     # add total cell count column
-    cc['total_count'] = cc[cell_populations].sum(axis=1)
+    cell_count['total_count'] = cell_count[cell_populations].sum(axis=1)
     
     # create summary table
     population_summary = cc.melt(
@@ -52,8 +68,10 @@ def main(cell_count):
     except Exception as e:
         print(e)
         sys.exit(1)
-    
-    print("finished")
+        
+        
+def statistical_analysis():
+    pass
     
     
 if __name__ == '__main__':
